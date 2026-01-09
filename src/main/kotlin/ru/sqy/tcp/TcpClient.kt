@@ -38,7 +38,7 @@ class TcpClient(
     }
 
     fun send(str: String) {
-        writer.write(str)
+        writer.appendLine(str)
         writer.flush()
     }
 
@@ -48,9 +48,7 @@ class TcpClient(
             append(to.joinToString(","))
             append(" $str")
         }
-
-        writer.write(tcpMessage)
-        writer.flush()
+        send(tcpMessage)
     }
 
 }

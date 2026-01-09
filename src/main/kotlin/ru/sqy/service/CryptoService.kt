@@ -18,12 +18,15 @@ class CryptoService(
     private val zkpRange: ZkpRange,
 ) {
     fun generatePublicKey(): PublicKey {
-        cryptoState.keyPair = KeyPairBuilder().generateKeyPair()
-        return cryptoMapper.publicKeyToMessage(cryptoState.publicKey)
+        val generateKeyPair = KeyPairBuilder().generateKeyPair()
+        cryptoState.paillierPublicKey = generateKeyPair.publicKey
+        cryptoState.paillierPrivateKey = generateKeyPair.privateKey
+
+        return cryptoMapper.publicKeyToMessage(cryptoState.paillierPublicKey)
     }
 
     fun encryptCounter(counter: Int): BigInteger {
-        return cryptoState.publicKey.encrypt(BigInteger.valueOf(counter.toLong()))
+        return cryptoState.paillierPublicKey.encrypt(BigInteger.valueOf(counter.toLong()))
     }
 
     fun checkCounterComputation(counterMessage: Counter): CheckCounterComputationResult {
@@ -36,8 +39,9 @@ class CryptoService(
         }
     }
 
-    fun encryptShare(generateShare: Int): EncryptedShare {
-        val encryptedShare = cryptoState.publicKey.encrypt(BigInteger.valueOf(generateShare.toLong()))
+    fun encryptShare(share: Int, publicKey: PublicKey): EncryptedShare {
+        cryptoState.paillierPublicKey = cryptoMapper.publicKeyFromMessage(publicKey)
+        val encryptedShare = cryptoState.paillierPublicKey.encrypt(BigInteger.valueOf(share.toLong()))
         return cryptoMapper.encryptedShareToMessage(encryptedShare)
     }
 

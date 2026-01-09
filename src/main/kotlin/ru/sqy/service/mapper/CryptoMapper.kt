@@ -15,7 +15,17 @@ class CryptoMapper(
         return PublicKey(
             n = paillierPublicKey.n,
             g = paillierPublicKey.g,
+            bits = paillierPublicKey.bits,
             from = from
+        )
+    }
+
+    fun publicKeyFromMessage(publicKey: PublicKey): PaillierPublicKey {
+        return PaillierPublicKey(
+            publicKey.n,
+            publicKey.n.multiply(publicKey.n),
+            publicKey.g,
+            publicKey.bits
         )
     }
 

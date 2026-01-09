@@ -29,18 +29,27 @@ class GameLogic(
                 out(OutOfGameStatus.PASSED)
             }
 
+            print("ждем checkPassedPlayersResult")
             val checkPassedPlayersResult = phaseCheckForPassedPlayers()
+            println("checkPassedPlayersResult = ${checkPassedPlayersResult}")
             if (checkPassedPlayersResult == CheckPassedPlayersResult.PASSED) {
                 gameState.updateTurnIndex()
                 continue
             }
-
+            println("publicKey")
             phasePublicKey()
+            println("encryptedShares")
             phaseEncryptedShares()
+            println("updateCounter")
             phaseUpdateCounter()
+            println("confirmCounter")
             phaseConfirmCounter()
+            println("<m proof")
             phaseSendCounterBelowMProof()
+            println("check <m proof")
             phaseCheckCounterBelowMProof()
+
+            println("gan done")
 
             if (phaseCheckGameRunning() == CheckWinnerResult.GAME_DONE) {
                 phaseRevealWinner()
@@ -70,6 +79,7 @@ class GameLogic(
         var totalCount = retranslatorService.publicKeys.size + retranslatorService.outOfGame.size
         while (totalCount == 0) {
             Thread.sleep(400)
+            println(totalCount)
             totalCount = retranslatorService.publicKeys.size + retranslatorService.outOfGame.size
         }
 
@@ -98,7 +108,7 @@ class GameLogic(
     private fun phaseEncryptedShares() {
         if (!gameState.isMyTurn()) {
             val publicKey = retranslatorService.publicKeys.take()
-            val encryptedShare = cryptoService.encryptShare(shareService.generateShare())
+            val encryptedShare = cryptoService.encryptShare(shareService.generateShare(), publicKey)
             retranslatorService.send(encryptedShare, publicKey.from)
         } else {
             Thread.sleep(1000)
@@ -169,8 +179,8 @@ class GameLogic(
 
         while (true) {
             when (readlnOrNull()) {
-                "r" -> return ChooseActionResult.PASS
-                "p" -> return ChooseActionResult.DICE_ROLL
+                "p" -> return ChooseActionResult.PASS
+                "r" -> return ChooseActionResult.DICE_ROLL
                 else -> {
                     println("Неизвестная команда! попробуйте еще раз")
                     println("Ход/пасс? (r/p)")

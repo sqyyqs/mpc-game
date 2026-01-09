@@ -1,11 +1,13 @@
 package main.kotlin.ru.sqy.model.dto
 
 import ru.sqy.crypto.jpaillier.KeyPair
+import ru.sqy.crypto.jpaillier.PaillierPrivateKey
 import ru.sqy.crypto.jpaillier.PaillierPublicKey
 
 class CryptoState {
-    lateinit var keyPair: KeyPair
+    val keyPair: KeyPair
+        get() = KeyPair(paillierPrivateKey, paillierPublicKey, null)
 
-    val publicKey: PaillierPublicKey
-        get() = keyPair.publicKey
+    lateinit var paillierPrivateKey: PaillierPrivateKey
+    lateinit var paillierPublicKey: PaillierPublicKey
 }

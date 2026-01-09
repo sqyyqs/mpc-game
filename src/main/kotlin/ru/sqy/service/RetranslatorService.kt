@@ -1,5 +1,6 @@
 package main.kotlin.ru.sqy.service
 
+import com.fasterxml.jackson.core.JacksonException
 import main.kotlin.ru.sqy.model.message.Counter
 import main.kotlin.ru.sqy.model.message.EncryptedShare
 import main.kotlin.ru.sqy.model.message.Message
@@ -37,19 +38,18 @@ class RetranslatorService(
                 is OutOfGame -> outOfGame.put(message)
                 is RangeProof -> rangeProof.put(message)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
             if (raw.contains("Pick nickname:")) {
-                tcpClient.send("$id\n")
+                tcpClient.send("$id")
             } else {
-                val ids = raw.split("\n").drop(1)
-//                println(ids)
+                val ids = (raw.split("\n").drop(1) + id).sorted()
                 players.put(Players(ids = ids, from = ""))
             }
         }
     }
 
     fun sendPlayers() {
-        tcpClient.send("print\n")
+        tcpClient.send("print")
     }
 
     fun send(message: Message, to: String) {
