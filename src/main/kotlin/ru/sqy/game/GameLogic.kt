@@ -5,7 +5,6 @@ import main.kotlin.ru.sqy.model.dto.result.CheckWinnerResult
 import main.kotlin.ru.sqy.model.dto.Player
 import main.kotlin.ru.sqy.model.dto.PlayerStatus
 import main.kotlin.ru.sqy.model.dto.result.ChooseActionResult
-import main.kotlin.ru.sqy.model.dto.result.VerifyCounterResult
 import main.kotlin.ru.sqy.model.message.OutOfGame
 import main.kotlin.ru.sqy.model.message.OutOfGameStatus
 import main.kotlin.ru.sqy.service.CryptoService
@@ -40,11 +39,8 @@ class GameLogic(
             phaseEncryptedShares()
             phaseUpdateCounter()
             phaseConfirmCounter()
-            if (phaseVerifyCounter() == VerifyCounterResult.FAILED && gameState.isMyTurn()) {
-                out(OutOfGameStatus.OVERFLOWED)
-            }
-
-            phaseCheckForOutPlayers()
+            phaseSendCounterBelowMProof()
+            phaseCheckCounterBelowMProof()
 
             if (phaseCheckGameRunning() == CheckWinnerResult.GAME_DONE) {
                 phaseRevealWinner()
@@ -76,22 +72,15 @@ class GameLogic(
         }
 
         return if (retranslatorService.outOfGame.isNotEmpty()) {
-            phaseCheckForOutPlayers()
-            CheckPassedPlayersResult.PASSED
-        } else {
-            CheckPassedPlayersResult.SENT_PUBLIC_KEY
-        }
-    }
-
-    private fun phaseCheckForOutPlayers() {
-        val outMessagesCount = retranslatorService.outOfGame.size
-        if (outMessagesCount > 0) {
-            retranslatorService.outOfGame.take(outMessagesCount).forEach { outOfGameMessage ->
+            retranslatorService.outOfGame.forEach { outOfGameMessage ->
                 gameState.setStatus(
                     playerId = outOfGameMessage.from,
                     playerStatus = PlayerStatus.from(outOfGameMessage.status)
                 )
             }
+            CheckPassedPlayersResult.PASSED
+        } else {
+            CheckPassedPlayersResult.SENT_PUBLIC_KEY
         }
     }
 
@@ -142,31 +131,24 @@ class GameLogic(
         }
     }
 
-    private fun phaseVerifyCounter(): VerifyCounterResult {
-        //todo поменять
 
-
-        val result = "failure"
-        val fromId = "123"
-
+    private fun phaseSendCounterBelowMProof() {
         if (gameState.isMyTurn()) {
-            if (result == "failure") {
+            val proof = cryptoService.generateProof(gameState.counter)
+            if (cryptoService.verifyProof(proof)) {
                 out(OutOfGameStatus.OVERFLOWED)
-                return VerifyCounterResult.FAILED
-            } else {
-                return VerifyCounterResult.SUCCESS
             }
+            retranslatorService.send(proof, gameState.allOtherPlayerIds())
         }
+    }
 
+    private fun phaseCheckCounterBelowMProof() {
         if (!gameState.isMyTurn()) {
-            // проверка на то, что счетчик < m
-
-            if (result == "failure") {
-                gameState.setInactive(fromId)
+            val rangeProof = retranslatorService.rangeProof.take()
+            if (!cryptoService.verifyProof(rangeProof)) {
+                gameState.setStatus(rangeProof.from, PlayerStatus.OVERFLOWED)
             }
-            return VerifyCounterResult.ANOTHER_PLAYER
         }
-        return TODO()
     }
 
     private fun phaseCheckGameRunning(): CheckWinnerResult {
@@ -178,8 +160,7 @@ class GameLogic(
     }
 
     private fun phaseRevealWinner() {
-        //todo
-        // ривил будет буквальным)))
+        println("Ваш счет: " + gameState.counter)
     }
 
     private fun input(): ChooseActionResult {

@@ -1,11 +1,13 @@
 package main.kotlin.ru.sqy.service
 
+import com.sun.swing.internal.plaf.metal.resources.metal
 import main.kotlin.ru.sqy.model.message.Counter
 import main.kotlin.ru.sqy.model.message.EncryptedShare
 import main.kotlin.ru.sqy.model.message.Message
 import main.kotlin.ru.sqy.model.message.OutOfGame
 import main.kotlin.ru.sqy.model.message.Players
 import main.kotlin.ru.sqy.model.message.PublicKey
+import main.kotlin.ru.sqy.model.message.RangeProof
 import main.kotlin.ru.sqy.service.mapper.MessageMapper
 import main.kotlin.ru.sqy.tcp.TcpClient
 import java.util.concurrent.LinkedBlockingQueue
@@ -19,6 +21,7 @@ class RetranslatorService(
     val shares = LinkedBlockingQueue<EncryptedShare>()
     val counter = LinkedBlockingQueue<Counter>()
     val outOfGame = LinkedBlockingQueue<OutOfGame>()
+    val rangeProof = LinkedBlockingQueue<RangeProof>()
 
     init {
         tcpClient.startThread { dispatch(it) }
@@ -31,6 +34,7 @@ class RetranslatorService(
             is EncryptedShare -> shares.put(message)
             is Counter -> counter.put(message)
             is OutOfGame -> outOfGame.put(message)
+            is RangeProof -> rangeProof.put(message)
         }
     }
 

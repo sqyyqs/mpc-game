@@ -1,17 +1,21 @@
 package main.kotlin.ru.sqy.service
 
+import com.weavechain.zk.bulletproofs.Proof
+import main.kotlin.ru.sqy.crypto.zkprange.ZkpRange
 import main.kotlin.ru.sqy.model.dto.CryptoState
 import main.kotlin.ru.sqy.model.dto.result.CheckCounterComputationResult
 import main.kotlin.ru.sqy.model.message.Counter
 import main.kotlin.ru.sqy.model.message.EncryptedShare
 import main.kotlin.ru.sqy.model.message.PublicKey
+import main.kotlin.ru.sqy.model.message.RangeProof
 import main.kotlin.ru.sqy.service.mapper.CryptoMapper
 import ru.sqy.crypto.jpaillier.KeyPairBuilder
 import java.math.BigInteger
 
 class CryptoService(
-    val cryptoState: CryptoState,
-    val cryptoMapper: CryptoMapper,
+    private val cryptoState: CryptoState,
+    private val cryptoMapper: CryptoMapper,
+    private val zkpRange: ZkpRange,
 ) {
     fun generatePublicKey(): PublicKey {
         cryptoState.keyPair = KeyPairBuilder().generateKeyPair()
@@ -43,7 +47,11 @@ class CryptoService(
         }
     }
 
-    fun checkIsBelow() {
-        TODO("Not yet implemented")
+    fun generateProof(counter: Int): RangeProof {
+        return cryptoMapper.rangeProofToMessage(zkpRange.generateProof(counter))
+    }
+
+    fun verifyProof(proof: RangeProof): Boolean {
+        return zkpRange.verify(Proof.deserialize(proof.data))
     }
 }

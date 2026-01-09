@@ -1,5 +1,6 @@
 package main.kotlin.ru.sqy
 
+import main.kotlin.ru.sqy.crypto.zkprange.ZkpRange
 import main.kotlin.ru.sqy.game.GameLogic
 import main.kotlin.ru.sqy.game.GameState
 import main.kotlin.ru.sqy.model.dto.CryptoState
@@ -19,9 +20,10 @@ fun main(args: Array<String>) {
     val tcpClient = TcpClient(configService.connectionInfo)
     val messageMapper = MessageMapper()
     val cryptoMapper = CryptoMapper(id)
+    val zkpRange = ZkpRange(configService.gameParameters)
 
     val retranslatorService = RetranslatorService(tcpClient, messageMapper)
-    val cryptoService = CryptoService(CryptoState(), cryptoMapper)
+    val cryptoService = CryptoService(CryptoState(), cryptoMapper, zkpRange)
     val shareService = ShareService(configService.gameParameters)
 
     val gameLogic = GameLogic(

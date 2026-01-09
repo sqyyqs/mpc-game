@@ -14,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
     JsonSubTypes.Type(value = OutOfGame::class, name = "OutOfGame"),
     JsonSubTypes.Type(value = Players::class, name = "Players"),
     JsonSubTypes.Type(value = PublicKey::class, name = "PublicKey"),
+    JsonSubTypes.Type(value = RangeProof::class, name = "RangeProof"),
 )
 interface Message {
     fun from(): String
