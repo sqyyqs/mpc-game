@@ -58,6 +58,7 @@ class GameLogic(
             retranslatorService.sendPlayers()
             Thread.sleep(1000)
             gameState.players = retranslatorService.players.take().ids.map { Player(it) }.toMutableList()
+            println(gameState.players)
         }
     }
 

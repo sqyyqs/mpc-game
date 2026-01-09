@@ -27,7 +27,7 @@ fun main(args: Array<String>) {
     val shareService = ShareService(configService.gameParameters)
 
     val gameLogic = GameLogic(
-        desiredPlayersState = configService.players,
+        desiredPlayersState = configService.players.filter { it != id },
         retranslatorService = retranslatorService,
         cryptoService = cryptoService,
         shareService = shareService,

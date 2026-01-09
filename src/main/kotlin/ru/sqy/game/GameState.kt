@@ -20,10 +20,6 @@ data class GameState(
         return activePlayers.map { it.id }.containsAll(desiredState)
     }
 
-    //todo почему не используется?
-    fun isPlayerActive(id: String = this.id) =
-        players.find { it.id == id }?.status == PlayerStatus.ACTIVE
-
     fun setStatus(playerId: String, playerStatus: PlayerStatus) {
         players.forEachIndexed { index, player ->
             if (player.id == playerId) {
