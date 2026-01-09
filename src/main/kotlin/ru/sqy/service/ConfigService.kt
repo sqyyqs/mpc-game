@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import main.kotlin.ru.sqy.model.dto.ConnectionInfo
 import main.kotlin.ru.sqy.model.dto.GameParameters
 
+@Suppress("UNCHECKED_CAST")
 class ConfigService {
     val gameParameters: GameParameters
     val players: List<String>

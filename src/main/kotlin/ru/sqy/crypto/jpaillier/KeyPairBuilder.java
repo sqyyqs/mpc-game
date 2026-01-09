@@ -122,14 +122,12 @@ public class KeyPairBuilder {
 
     }
 
-    // TODO separate this somewhere
     private BigInteger calculateL(BigInteger u, BigInteger n) {
         BigInteger result = u.subtract(BigInteger.ONE);
         result = result.divide(n);
         return result;
     }
 
-    // TODO add to own BigInteger extended class
     private BigInteger lcm(BigInteger a, BigInteger b) {
         BigInteger result;
         BigInteger gcd = a.gcd(b);

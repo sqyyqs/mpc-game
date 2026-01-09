@@ -5,7 +5,7 @@ import main.kotlin.ru.sqy.model.dto.PlayerStatus
 
 data class GameState(
     var id: String,
-    var counter: Int,
+    var counter: Int = 0,
     var players: MutableList<Player> = mutableListOf(),
     private var currentTurnIndex: Int = 0,
 ) {
