@@ -55,7 +55,8 @@ class GameLogic(
     private fun phaseWaitAll() {
         gameState.players = retranslatorService.players.take().ids.map { Player(it) }.toMutableList()
         while (!gameState.isMatches(desiredPlayersState)) {
-            Thread.sleep(500)
+            retranslatorService.sendPlayers()
+            Thread.sleep(1000)
             gameState.players = retranslatorService.players.take().ids.map { Player(it) }.toMutableList()
         }
     }
@@ -130,7 +131,6 @@ class GameLogic(
             cryptoService.checkCounterComputation(updatedCounterMessage)
         }
     }
-
 
     private fun phaseSendCounterBelowMProof() {
         if (gameState.isMyTurn()) {

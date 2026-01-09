@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import main.kotlin.ru.sqy.model.dto.ConnectionInfo
 import main.kotlin.ru.sqy.model.dto.GameParameters
+import java.io.File
 
 @Suppress("UNCHECKED_CAST")
 class ConfigService {
@@ -13,7 +14,7 @@ class ConfigService {
 
     init {
         val mapper = ObjectMapper()
-        val file = Thread.currentThread().contextClassLoader.getResource("config.json")!!.file
+        val file = File("/home/konst/Documents/laba3/src/main/resources/config.json")
         val typeRef
                 : TypeReference<HashMap<String, Any>> = object : TypeReference<HashMap<String, Any>>() {}
         val value: Map<String, Any> = mapper.readValue(file, typeRef)
@@ -35,11 +36,11 @@ class ConfigService {
     private fun playersFrom(params: Map<String, Any>) = params["players"] as List<String>
 
     private fun connectionInfoFrom(params: Map<String, Any>): ConnectionInfo {
-        val connectInfoMap = params["connect"] as Map<String, String>
+        val connectInfoMap = params["connect"] as Map<String, Any>
 
         return ConnectionInfo(
-            host = connectInfoMap["host"]!!,
-            port = connectInfoMap["port"]!!.toInt()
+            host = connectInfoMap["host"] as String,
+            port = connectInfoMap["port"] as Int
         )
     }
 }

@@ -14,6 +14,7 @@ import java.util.concurrent.LinkedBlockingQueue
 class RetranslatorService(
     private val tcpClient: TcpClient,
     private val messageMapper: MessageMapper,
+    private val id: String
 ) {
     val players = LinkedBlockingQueue<Players>()
     val publicKeys = LinkedBlockingQueue<PublicKey>()
@@ -27,6 +28,16 @@ class RetranslatorService(
     }
 
     private fun dispatch(raw: String) {
+        if (raw.contains("Pick nickname:")) {
+            tcpClient.send("$id\n")
+            return
+        }
+
+        if (raw.contains("available connections:")) {
+            players.put(Players(ids = listOf(), from = ""))
+            return
+        }
+
         when (val message = messageMapper.fromRawString(raw)) {
             is Players -> players.put(message)
             is PublicKey -> publicKeys.put(message)
@@ -35,6 +46,10 @@ class RetranslatorService(
             is OutOfGame -> outOfGame.put(message)
             is RangeProof -> rangeProof.put(message)
         }
+    }
+
+    fun sendPlayers() {
+        tcpClient.send("print\n")
     }
 
     fun send(message: Message, to: String) {

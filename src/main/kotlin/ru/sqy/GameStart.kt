@@ -22,7 +22,7 @@ fun main(args: Array<String>) {
     val cryptoMapper = CryptoMapper(id)
     val zkpRange = ZkpRange(configService.gameParameters)
 
-    val retranslatorService = RetranslatorService(tcpClient, messageMapper)
+    val retranslatorService = RetranslatorService(tcpClient, messageMapper, id)
     val cryptoService = CryptoService(CryptoState(), cryptoMapper, zkpRange)
     val shareService = ShareService(configService.gameParameters)
 

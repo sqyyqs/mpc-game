@@ -26,6 +26,11 @@ class TcpClient(
         }
     }
 
+    fun send(str: String) {
+        writer.write(str)
+        writer.flush()
+    }
+
     fun send(str: String, to: List<String>) {
         val tcpMessage = buildString {
             append("send ")
@@ -34,6 +39,7 @@ class TcpClient(
         }
 
         writer.write(tcpMessage)
+        writer.flush()
     }
 
 }

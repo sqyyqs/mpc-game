@@ -17,7 +17,7 @@ data class GameState(
     }
 
     fun isMatches(desiredState: List<String>): Boolean {
-        return desiredState.containsAll(activePlayers.map { it.id })
+        return activePlayers.map { it.id }.containsAll(desiredState)
     }
 
     //todo почему не используется?
