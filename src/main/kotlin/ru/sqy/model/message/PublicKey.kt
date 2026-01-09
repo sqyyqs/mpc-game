@@ -1,0 +1,12 @@
+package main.kotlin.ru.sqy.model.message
+
+import java.math.BigInteger
+
+data class PublicKey(
+    val n: BigInteger,
+    val g: BigInteger,
+    val from: String,
+) : Message {
+    override fun from() = from
+    override fun typeName() = "PublicKey"
+}

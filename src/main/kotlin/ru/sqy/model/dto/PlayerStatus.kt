@@ -1,0 +1,18 @@
+package main.kotlin.ru.sqy.model.dto
+
+import main.kotlin.ru.sqy.model.message.OutOfGameStatus
+
+enum class PlayerStatus {
+    ACTIVE,
+    OVERFLOWED,
+    PASSED;
+
+    companion object {
+        fun from(outOfGameStatus: OutOfGameStatus): PlayerStatus {
+            return when (outOfGameStatus) {
+                OutOfGameStatus.PASSED -> PASSED
+                OutOfGameStatus.OVERFLOWED -> OVERFLOWED
+            }
+        }
+    }
+}
