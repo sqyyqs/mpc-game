@@ -1,6 +1,5 @@
 package main.kotlin.ru.sqy.service
 
-import com.sun.swing.internal.plaf.metal.resources.metal
 import main.kotlin.ru.sqy.model.message.Counter
 import main.kotlin.ru.sqy.model.message.EncryptedShare
 import main.kotlin.ru.sqy.model.message.Message

@@ -1,6 +1,5 @@
 package main.kotlin.ru.sqy.crypto.zkprange
 
-import com.weavechain.ec.Scalar
 import com.weavechain.zk.bulletproofs.BulletProofGenerators
 import com.weavechain.zk.bulletproofs.BulletProofs
 import com.weavechain.zk.bulletproofs.PedersenCommitment
