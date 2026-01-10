@@ -1,14 +1,14 @@
-package main.kotlin.ru.sqy.service
+package ru.sqy.service
 
-import main.kotlin.ru.sqy.model.message.Counter
-import main.kotlin.ru.sqy.model.message.EncryptedShare
+import ru.sqy.model.message.Counter
+import ru.sqy.model.message.EncryptedShare
 import main.kotlin.ru.sqy.model.message.Message
-import main.kotlin.ru.sqy.model.message.OutOfGame
-import main.kotlin.ru.sqy.model.message.Players
-import main.kotlin.ru.sqy.model.message.PublicKey
-import main.kotlin.ru.sqy.model.message.RangeProof
-import main.kotlin.ru.sqy.service.mapper.MessageMapper
-import main.kotlin.ru.sqy.tcp.TcpClient
+import ru.sqy.model.message.OutOfGame
+import ru.sqy.model.message.Players
+import ru.sqy.model.message.PublicKey
+import ru.sqy.model.message.RangeProof
+import ru.sqy.service.mapper.MessageMapper
+import ru.sqy.tcp.TcpClient
 import java.util.concurrent.LinkedBlockingQueue
 
 class RetranslatorService(

@@ -2,6 +2,12 @@ package main.kotlin.ru.sqy.model.message
 
 import com.fasterxml.jackson.annotation.JsonSubTypes
 import com.fasterxml.jackson.annotation.JsonTypeInfo
+import ru.sqy.model.message.Counter
+import ru.sqy.model.message.EncryptedShare
+import ru.sqy.model.message.OutOfGame
+import ru.sqy.model.message.Players
+import ru.sqy.model.message.PublicKey
+import ru.sqy.model.message.RangeProof
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,

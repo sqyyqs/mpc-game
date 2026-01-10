@@ -1,6 +1,6 @@
-package main.kotlin.ru.sqy.model.dto
+package ru.sqy.model.dto
 
-import main.kotlin.ru.sqy.model.message.OutOfGameStatus
+import ru.sqy.model.message.OutOfGameStatus
 
 enum class PlayerStatus {
     ACTIVE,

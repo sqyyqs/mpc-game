@@ -1,10 +1,10 @@
 package main.kotlin.ru.sqy.service.mapper
 
 import com.weavechain.zk.bulletproofs.Proof
-import main.kotlin.ru.sqy.model.message.Counter
-import main.kotlin.ru.sqy.model.message.EncryptedShare
-import main.kotlin.ru.sqy.model.message.PublicKey
-import main.kotlin.ru.sqy.model.message.RangeProof
+import ru.sqy.model.message.Counter
+import ru.sqy.model.message.EncryptedShare
+import ru.sqy.model.message.PublicKey
+import ru.sqy.model.message.RangeProof
 import ru.sqy.crypto.jpaillier.PaillierPublicKey
 import java.math.BigInteger
 

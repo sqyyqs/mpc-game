@@ -1,4 +1,6 @@
-package main.kotlin.ru.sqy.model.message
+package ru.sqy.model.message
+
+import main.kotlin.ru.sqy.model.message.Message
 
 data class OutOfGame(
     val from: String,

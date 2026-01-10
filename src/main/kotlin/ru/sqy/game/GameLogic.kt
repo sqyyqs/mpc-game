@@ -1,16 +1,16 @@
-package main.kotlin.ru.sqy.game
+package ru.sqy.game
 
-import main.kotlin.ru.sqy.model.dto.result.CheckPassedPlayersResult
-import main.kotlin.ru.sqy.model.dto.result.CheckWinnerResult
-import main.kotlin.ru.sqy.model.dto.Player
-import main.kotlin.ru.sqy.model.dto.PlayerStatus
-import main.kotlin.ru.sqy.model.dto.result.ChooseActionResult
-import main.kotlin.ru.sqy.model.message.EncryptedShare
-import main.kotlin.ru.sqy.model.message.OutOfGame
-import main.kotlin.ru.sqy.model.message.OutOfGameStatus
-import main.kotlin.ru.sqy.service.CryptoService
-import main.kotlin.ru.sqy.service.RetranslatorService
-import main.kotlin.ru.sqy.service.ShareService
+import ru.sqy.model.dto.result.CheckPassedPlayersResult
+import ru.sqy.model.dto.result.CheckWinnerResult
+import ru.sqy.model.dto.Player
+import ru.sqy.model.dto.PlayerStatus
+import ru.sqy.model.dto.result.ChooseActionResult
+import ru.sqy.model.message.EncryptedShare
+import ru.sqy.model.message.OutOfGame
+import ru.sqy.model.message.OutOfGameStatus
+import ru.sqy.service.CryptoService
+import ru.sqy.service.RetranslatorService
+import ru.sqy.service.ShareService
 import main.kotlin.ru.sqy.service.mapper.CryptoMapper
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -26,8 +26,11 @@ class GameLogic(
     fun game() {
         phaseWaitAll()
         gameState.initQueue()
+
         while (true) {
-            println("Счетчик: ${gameState.counter}")
+            if (gameState.isMyTurn()) {
+                println("Счетчик: ${gameState.counter}")
+            }
             if (phaseCheckGameRunning() == CheckWinnerResult.GAME_DONE) {
                 break
             }

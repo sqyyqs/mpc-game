@@ -1,7 +1,7 @@
-package main.kotlin.ru.sqy.game
+package ru.sqy.game
 
-import main.kotlin.ru.sqy.model.dto.Player
-import main.kotlin.ru.sqy.model.dto.PlayerStatus
+import ru.sqy.model.dto.Player
+import ru.sqy.model.dto.PlayerStatus
 import ru.sqy.model.dto.TurnQueue
 
 data class GameState(

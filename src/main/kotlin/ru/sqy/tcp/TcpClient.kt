@@ -1,6 +1,6 @@
-package main.kotlin.ru.sqy.tcp
+package ru.sqy.tcp
 
-import main.kotlin.ru.sqy.model.dto.ConnectionInfo
+import ru.sqy.model.dto.ConnectionInfo
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.PrintWriter

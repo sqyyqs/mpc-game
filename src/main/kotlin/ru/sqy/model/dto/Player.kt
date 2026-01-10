@@ -1,4 +1,4 @@
-package main.kotlin.ru.sqy.model.dto
+package ru.sqy.model.dto
 
 data class Player(
     val id: String,

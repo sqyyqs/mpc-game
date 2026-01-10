@@ -1,4 +1,4 @@
-package main.kotlin.ru.sqy.service.mapper
+package ru.sqy.service.mapper
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import main.kotlin.ru.sqy.model.message.Message

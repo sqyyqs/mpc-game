@@ -1,13 +1,13 @@
-package main.kotlin.ru.sqy.service
+package ru.sqy.service
 
 import com.weavechain.zk.bulletproofs.Proof
-import main.kotlin.ru.sqy.crypto.zkprange.ZkpRange
-import main.kotlin.ru.sqy.model.dto.CryptoState
-import main.kotlin.ru.sqy.model.dto.result.CheckCounterComputationResult
-import main.kotlin.ru.sqy.model.message.Counter
-import main.kotlin.ru.sqy.model.message.EncryptedShare
-import main.kotlin.ru.sqy.model.message.PublicKey
-import main.kotlin.ru.sqy.model.message.RangeProof
+import ru.sqy.crypto.zkprange.ZkpRange
+import ru.sqy.model.dto.CryptoState
+import ru.sqy.model.dto.result.CheckCounterComputationResult
+import ru.sqy.model.message.Counter
+import ru.sqy.model.message.EncryptedShare
+import ru.sqy.model.message.PublicKey
+import ru.sqy.model.message.RangeProof
 import main.kotlin.ru.sqy.service.mapper.CryptoMapper
 import ru.sqy.crypto.jpaillier.KeyPairBuilder
 import java.math.BigInteger

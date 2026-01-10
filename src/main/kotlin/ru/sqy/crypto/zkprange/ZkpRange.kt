@@ -1,4 +1,4 @@
-package main.kotlin.ru.sqy.crypto.zkprange
+package ru.sqy.crypto.zkprange
 
 import com.weavechain.zk.bulletproofs.BulletProofGenerators
 import com.weavechain.zk.bulletproofs.BulletProofs
@@ -8,7 +8,7 @@ import com.weavechain.zk.bulletproofs.Utils
 import com.weavechain.zk.bulletproofs.gadgets.Gadgets
 import com.weavechain.zk.bulletproofs.gadgets.NumberInRange
 import com.weavechain.zk.bulletproofs.gadgets.NumberInRangeParams
-import main.kotlin.ru.sqy.model.dto.GameParameters
+import ru.sqy.model.dto.GameParameters
 
 class ZkpRange(
     gameParameters: GameParameters

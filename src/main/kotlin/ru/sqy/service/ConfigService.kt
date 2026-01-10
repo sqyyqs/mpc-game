@@ -1,9 +1,9 @@
-package main.kotlin.ru.sqy.service
+package ru.sqy.service
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import main.kotlin.ru.sqy.model.dto.ConnectionInfo
-import main.kotlin.ru.sqy.model.dto.GameParameters
+import ru.sqy.model.dto.ConnectionInfo
+import ru.sqy.model.dto.GameParameters
 import java.io.File
 
 @Suppress("UNCHECKED_CAST")

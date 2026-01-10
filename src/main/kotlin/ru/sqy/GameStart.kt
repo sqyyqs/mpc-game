@@ -1,16 +1,16 @@
-package main.kotlin.ru.sqy
+package ru.sqy
 
-import main.kotlin.ru.sqy.crypto.zkprange.ZkpRange
-import main.kotlin.ru.sqy.game.GameLogic
-import main.kotlin.ru.sqy.game.GameState
-import main.kotlin.ru.sqy.model.dto.CryptoState
-import main.kotlin.ru.sqy.service.ConfigService
-import main.kotlin.ru.sqy.service.CryptoService
-import main.kotlin.ru.sqy.service.RetranslatorService
-import main.kotlin.ru.sqy.service.ShareService
+import ru.sqy.crypto.zkprange.ZkpRange
+import ru.sqy.game.GameLogic
+import ru.sqy.game.GameState
+import ru.sqy.model.dto.CryptoState
+import ru.sqy.service.ConfigService
+import ru.sqy.service.CryptoService
+import ru.sqy.service.RetranslatorService
+import ru.sqy.service.ShareService
 import main.kotlin.ru.sqy.service.mapper.CryptoMapper
-import main.kotlin.ru.sqy.service.mapper.MessageMapper
-import main.kotlin.ru.sqy.tcp.TcpClient
+import ru.sqy.service.mapper.MessageMapper
+import ru.sqy.tcp.TcpClient
 import ru.sqy.model.dto.TurnQueue
 
 fun main(args: Array<String>) {

@@ -1,5 +1,6 @@
-package main.kotlin.ru.sqy.model.message
+package ru.sqy.model.message
 
+import main.kotlin.ru.sqy.model.message.Message
 import java.math.BigInteger
 
 data class Counter(

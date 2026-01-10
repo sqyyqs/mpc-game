@@ -1,6 +1,6 @@
-package main.kotlin.ru.sqy.service
+package ru.sqy.service
 
-import main.kotlin.ru.sqy.model.dto.GameParameters
+import ru.sqy.model.dto.GameParameters
 import java.security.SecureRandom
 import kotlin.math.roundToInt
 
