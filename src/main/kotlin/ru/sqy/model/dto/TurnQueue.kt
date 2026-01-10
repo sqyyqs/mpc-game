@@ -4,7 +4,6 @@ class TurnQueue<T>(
     private val list: MutableList<T>,
     private var index: Int = 0,
 ) {
-
     fun current(): T =
         list[index]
 

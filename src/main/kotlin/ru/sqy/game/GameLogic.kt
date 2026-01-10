@@ -13,6 +13,7 @@ import ru.sqy.service.RetranslatorService
 import ru.sqy.service.ShareService
 import main.kotlin.ru.sqy.service.mapper.CryptoMapper
 import java.util.concurrent.LinkedBlockingQueue
+import kotlin.system.exitProcess
 
 class GameLogic(
     private val desiredPlayersState: List<String>,
@@ -28,11 +29,11 @@ class GameLogic(
         gameState.initQueue()
 
         while (true) {
-            if (gameState.isMyTurn()) {
-                println("Счетчик: ${gameState.counter}")
-            }
             if (phaseCheckGameRunning() == CheckWinnerResult.GAME_DONE) {
                 break
+            }
+            if (gameState.isMyTurn()) {
+                println("Счетчик: ${gameState.counter}")
             }
             if (gameState.isMyTurn() && input() == ChooseActionResult.PASS) {
                 out(OutOfGameStatus.PASSED)
@@ -127,7 +128,9 @@ class GameLogic(
             val decryptedShares = cryptoService.decryptShares(encryptedShares)
 
             val encryptedOldCounter = cryptoService.encryptCounter(gameState.counter)
-            gameState.counter += shareService.calculateFromShares(decryptedShares)
+            val numberToAdd = shareService.calculateFromShares(decryptedShares)
+            println("Добавляемое значение: $numberToAdd")
+            gameState.counter += numberToAdd
             val encryptedCounter = cryptoService.encryptCounter(gameState.counter)
 
             val encryptedCounterMessage = cryptoMapper.encryptedCounterToMessage(
@@ -183,7 +186,9 @@ class GameLogic(
     }
 
     private fun phaseRevealWinner() {
+        println("Конец игры!")
         println("Ваш счет: " + gameState.counter)
+        exitProcess(0)
     }
 
     private fun input(): ChooseActionResult {
