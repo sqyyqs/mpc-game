@@ -2,7 +2,6 @@ package main.kotlin.ru.sqy.tcp
 
 import main.kotlin.ru.sqy.model.dto.ConnectionInfo
 import java.io.BufferedReader
-import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.PrintWriter
 import java.net.Socket
@@ -30,7 +29,7 @@ class TcpClient(
                     msg = msg.dropLast(1)
                 }
 
-                println("SERVER: $msg") //todo возможность отключения + если в конце нет \n добавить
+//                println("SERVER: $msg")
 
                 callback(msg)
             }

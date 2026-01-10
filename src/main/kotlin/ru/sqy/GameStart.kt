@@ -11,6 +11,7 @@ import main.kotlin.ru.sqy.service.ShareService
 import main.kotlin.ru.sqy.service.mapper.CryptoMapper
 import main.kotlin.ru.sqy.service.mapper.MessageMapper
 import main.kotlin.ru.sqy.tcp.TcpClient
+import ru.sqy.model.dto.TurnQueue
 
 fun main(args: Array<String>) {
     val configService = ConfigService()
@@ -31,7 +32,7 @@ fun main(args: Array<String>) {
         retranslatorService = retranslatorService,
         cryptoService = cryptoService,
         shareService = shareService,
-        gameState = GameState(id),
+        gameState = GameState(id = id, m = configService.gameParameters.m, turnQueue = TurnQueue(mutableListOf())),
         cryptoMapper = cryptoMapper
     )
 

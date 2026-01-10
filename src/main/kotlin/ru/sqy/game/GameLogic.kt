@@ -5,12 +5,14 @@ import main.kotlin.ru.sqy.model.dto.result.CheckWinnerResult
 import main.kotlin.ru.sqy.model.dto.Player
 import main.kotlin.ru.sqy.model.dto.PlayerStatus
 import main.kotlin.ru.sqy.model.dto.result.ChooseActionResult
+import main.kotlin.ru.sqy.model.message.EncryptedShare
 import main.kotlin.ru.sqy.model.message.OutOfGame
 import main.kotlin.ru.sqy.model.message.OutOfGameStatus
 import main.kotlin.ru.sqy.service.CryptoService
 import main.kotlin.ru.sqy.service.RetranslatorService
 import main.kotlin.ru.sqy.service.ShareService
 import main.kotlin.ru.sqy.service.mapper.CryptoMapper
+import java.util.concurrent.LinkedBlockingQueue
 
 class GameLogic(
     private val desiredPlayersState: List<String>,
@@ -23,51 +25,49 @@ class GameLogic(
 
     fun game() {
         phaseWaitAll()
-
+        gameState.initQueue()
         while (true) {
+            println("Счетчик: ${gameState.counter}")
+            if (phaseCheckGameRunning() == CheckWinnerResult.GAME_DONE) {
+                break
+            }
             if (gameState.isMyTurn() && input() == ChooseActionResult.PASS) {
                 out(OutOfGameStatus.PASSED)
+                if (phaseCheckGameRunning() == CheckWinnerResult.GAME_DONE) {
+                    break
+                }
             }
 
-            print("ждем checkPassedPlayersResult")
             val checkPassedPlayersResult = phaseCheckForPassedPlayers()
-            println("checkPassedPlayersResult = ${checkPassedPlayersResult}")
             if (checkPassedPlayersResult == CheckPassedPlayersResult.PASSED) {
-                gameState.updateTurnIndex()
                 continue
             }
-            println("publicKey")
             phasePublicKey()
-            println("encryptedShares")
             phaseEncryptedShares()
-            println("updateCounter")
             phaseUpdateCounter()
-            println("confirmCounter")
             phaseConfirmCounter()
-            println("<m proof")
             phaseSendCounterBelowMProof()
-            println("check <m proof")
-            phaseCheckCounterBelowMProof()
-
-            println("gan done")
-
-            if (phaseCheckGameRunning() == CheckWinnerResult.GAME_DONE) {
-                phaseRevealWinner()
-                return
+            val isOverflowNotHappened = phaseCheckCounterBelowMProof()
+            if (gameState.counter >= gameState.m) {
+                println("Перебор...")
+                out(OutOfGameStatus.OVERFLOWED)
             }
-
-            gameState.updateTurnIndex()
+            if (isOverflowNotHappened) {
+                gameState.updateTurnIndex()
+            }
         }
+        phaseRevealWinner()
     }
 
 
     private fun phaseWaitAll() {
-        gameState.players = retranslatorService.players.take().ids.map { Player(it) }.toMutableList()
+        fun RetranslatorService.retrieveIds() = this.players.take().ids.sorted().map { Player(it) }.toMutableList()
+
+        gameState.players = retranslatorService.retrieveIds()
         while (!gameState.isMatches(desiredPlayersState)) {
             retranslatorService.sendPlayers()
             Thread.sleep(1000)
-            gameState.players = retranslatorService.players.take().ids.map { Player(it) }.toMutableList()
-            println(gameState.players)
+            gameState.players = retranslatorService.retrieveIds()
         }
     }
 
@@ -79,12 +79,11 @@ class GameLogic(
         var totalCount = retranslatorService.publicKeys.size + retranslatorService.outOfGame.size
         while (totalCount == 0) {
             Thread.sleep(400)
-            println(totalCount)
             totalCount = retranslatorService.publicKeys.size + retranslatorService.outOfGame.size
         }
 
         return if (retranslatorService.outOfGame.isNotEmpty()) {
-            retranslatorService.outOfGame.forEach { outOfGameMessage ->
+            retranslatorService.outOfGame.takeN(retranslatorService.outOfGame.size).forEach { outOfGameMessage ->
                 gameState.setStatus(
                     playerId = outOfGameMessage.from,
                     playerStatus = PlayerStatus.from(outOfGameMessage.status)
@@ -117,7 +116,11 @@ class GameLogic(
 
     private fun phaseUpdateCounter() {
         if (gameState.isMyTurn()) {
-            val encryptedShares = retranslatorService.shares.take(gameState.activePlayers.size - 1)
+            val encryptedShares = mutableListOf<EncryptedShare>()
+            repeat(gameState.players.size - 1) {
+                encryptedShares.add(retranslatorService.shares.take())
+            }
+
             val decryptedShares = cryptoService.decryptShares(encryptedShares)
 
             val encryptedOldCounter = cryptoService.encryptCounter(gameState.counter)
@@ -140,33 +143,39 @@ class GameLogic(
         if (!gameState.isMyTurn()) {
             val updatedCounterMessage = retranslatorService.counter.take()
             cryptoService.checkCounterComputation(updatedCounterMessage)
+        } else {
+            Thread.sleep(1000)
         }
     }
 
     private fun phaseSendCounterBelowMProof() {
         if (gameState.isMyTurn()) {
             val proof = cryptoService.generateProof(gameState.counter)
-            if (cryptoService.verifyProof(proof)) {
-                out(OutOfGameStatus.OVERFLOWED)
-            }
             retranslatorService.send(proof, gameState.allOtherPlayerIds())
+        } else {
+            Thread.sleep(1000)
         }
     }
 
-    private fun phaseCheckCounterBelowMProof() {
+    private fun phaseCheckCounterBelowMProof(): Boolean {
         if (!gameState.isMyTurn()) {
             val rangeProof = retranslatorService.rangeProof.take()
-            if (!cryptoService.verifyProof(rangeProof)) {
+            val verifyProof = cryptoService.verifyProof(rangeProof)
+            if (!verifyProof) {
                 gameState.setStatus(rangeProof.from, PlayerStatus.OVERFLOWED)
             }
+            return verifyProof
+        } else {
+            Thread.sleep(1000)
         }
+        return true
     }
 
     private fun phaseCheckGameRunning(): CheckWinnerResult {
         return if (gameState.activePlayers.isEmpty()) {
-            CheckWinnerResult.STILL_GAMING
-        } else {
             CheckWinnerResult.GAME_DONE
+        } else {
+            CheckWinnerResult.STILL_GAMING
         }
     }
 
@@ -198,6 +207,14 @@ class GameLogic(
             ),
             to = gameState.allOtherPlayerIds()
         )
+    }
+
+    private fun <E> LinkedBlockingQueue<E & Any>.takeN(times: Int): List<E> {
+        val list = mutableListOf<E>()
+        repeat(times) {
+            list.add(take())
+        }
+        return list
     }
 
 }
