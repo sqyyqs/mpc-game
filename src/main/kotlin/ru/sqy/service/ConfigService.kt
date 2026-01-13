@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import ru.sqy.model.dto.ConnectionInfo
 import ru.sqy.model.dto.GameParameters
-import java.io.File
 
 @Suppress("UNCHECKED_CAST")
 class ConfigService {
@@ -14,7 +13,7 @@ class ConfigService {
 
     init {
         val mapper = ObjectMapper()
-        val file = File("/home/konst/Documents/laba3/src/main/resources/config.json")
+        val file = this::class.java.getResource("/config.json")
         val typeRef
                 : TypeReference<HashMap<String, Any>> = object : TypeReference<HashMap<String, Any>>() {}
         val value: Map<String, Any> = mapper.readValue(file, typeRef)
