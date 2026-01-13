@@ -2,11 +2,7 @@ package ru.sqy.crypto.jpaillier;
 
 import java.math.BigInteger;
 
-/**
- * A class that represents the private part of the Paillier key pair.
- */
 public class PaillierPrivateKey {
-
     private final BigInteger lambda;
     private final BigInteger preCalculatedDenominator;
 
