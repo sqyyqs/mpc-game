@@ -111,7 +111,8 @@ class GameLogic(
     private fun phaseEncryptedShares() {
         if (!gameState.isMyTurn()) {
             val publicKey = retranslatorService.publicKeys.take()
-            val encryptedShare = cryptoService.encryptShare(shareService.generateShare(), publicKey)
+            val share = shareService.generateShare(gameState.players.size)
+            val encryptedShare = cryptoService.encryptShare(share, publicKey)
             retranslatorService.send(encryptedShare, publicKey.from)
         } else {
             Thread.sleep(1000)

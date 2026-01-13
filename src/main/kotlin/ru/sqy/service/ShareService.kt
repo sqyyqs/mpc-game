@@ -2,17 +2,17 @@ package ru.sqy.service
 
 import ru.sqy.model.dto.GameParameters
 import java.security.SecureRandom
-import kotlin.math.roundToInt
 
 class ShareService(
     private val gameParameters: GameParameters,
     private val secureRandom: SecureRandom = SecureRandom(),
 ) {
-    fun generateShare(): Int {
-        return secureRandom.nextInt(gameParameters.n)
+    fun generateShare(playerCount: Int): Int {
+        val upperBound = (gameParameters.n / (playerCount - 1)) + 1
+        return secureRandom.nextInt(upperBound)
     }
 
     fun calculateFromShares(shares: List<Int>): Int {
-        return shares.average().roundToInt()
+        return shares.sum()
     }
 }
